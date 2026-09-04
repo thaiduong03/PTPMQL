@@ -1,0 +1,17 @@
+# Visual Studio / VS Code
+.vs/
+.vscode/
+
+# .NET build output
+**/bin/
+**/obj/
+
+# Publish output
+publish/
+
+# Packages / archives
+*.zip
+
+# User-specific files
+*.user
+*.suo

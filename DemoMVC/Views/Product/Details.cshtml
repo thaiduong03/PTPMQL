@@ -1,0 +1,40 @@
+@model DemoMVC.Models.Product
+
+@{
+    ViewData["Title"] = "Product Details";
+}
+
+<h1>Chi tiết sản phẩm</h1>
+
+@if (Model == null)
+{
+    <div class="alert alert-warning">
+        Chưa có sản phẩm.
+        Vui lòng tạo sản phẩm trước.
+    </div>
+}
+else
+{
+    @if (ViewBag.Message != null)
+    {
+        <div class="alert alert-success">
+            @ViewBag.Message
+        </div>
+    }
+
+    <p>
+        <strong>ID:</strong> @Model.Id
+    </p>
+
+    <p>
+        <strong>Tên sản phẩm:</strong> @Model.Name
+    </p>
+
+    <p>
+        <strong>Giá:</strong> @Model.Price.ToString("N0") VNĐ
+    </p>
+
+    <p>
+        <strong>Mô tả:</strong> @Model.Description
+    </p>
+}

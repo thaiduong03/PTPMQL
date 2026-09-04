@@ -1,0 +1,39 @@
+@model DemoMVC.Models.Product
+
+@{
+    ViewData["Title"] = "Create Product";
+}
+
+<h1>Thêm sản phẩm</h1>
+
+<form asp-controller="Product" asp-action="Create" method="post">
+
+    <div class="mb-3">
+        <label asp-for="Name" class="form-label">
+            Tên sản phẩm
+        </label>
+
+        <input asp-for="Name" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Price" class="form-label">
+            Giá
+        </label>
+
+        <input asp-for="Price" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Description" class="form-label">
+            Mô tả
+        </label>
+
+        <textarea asp-for="Description" class="form-control"></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary">
+        Thêm sản phẩm
+    </button>
+
+</form>
