@@ -19,78 +19,46 @@
                 @if (ViewBag.Message != null)
                 {
                     <div class="alert alert-success">
-                        <strong>ViewBag:</strong>
+                        <strong>Thông báo:</strong>
                         @ViewBag.Message
                     </div>
                 }
 
-                @if (ViewData["ProductName"] != null)
-                {
-                    <div class="alert alert-info">
-                        <strong>ViewData:</strong>
-                        @ViewData["ProductName"]
-                    </div>
-                }
+                <div class="mb-3">
+                    <strong>ID:</strong>
+                    @Model.Id
+                </div>
 
-                @if (TempData["SuccessMessage"] != null)
-                {
-                    <div class="alert alert-primary">
-                        <strong>TempData:</strong>
-                        @TempData["SuccessMessage"]
-                    </div>
-                }
+                <div class="mb-3">
+                    <strong>Tên sản phẩm:</strong>
+                    @Model.Name
+                </div>
 
-                @if (Model != null && !string.IsNullOrEmpty(Model.Name))
-                {
-                    <hr />
+                <div class="mb-3">
+                    <strong>Giá:</strong>
+                    @Model.Price.ToString("N0") VNĐ
+                </div>
 
-                    <div class="mb-3">
-                        <strong>ID:</strong>
-                        <span>@Model.Id</span>
-                    </div>
+                <div class="mb-3">
+                    <strong>Mô tả:</strong>
+                    @Model.Description
+                </div>
 
-                    <div class="mb-3">
-                        <strong>Tên sản phẩm:</strong>
-                        <span>@Model.Name</span>
-                    </div>
+                <div class="mt-4">
 
-                    <div class="mb-3">
-                        <strong>Giá:</strong>
-                        <span>@Model.Price.ToString("N0") VNĐ</span>
-                    </div>
-
-                    <div class="mb-3">
-                        <strong>Mô tả:</strong>
-                        <span>@Model.Description</span>
-                    </div>
-
-                    <div class="mt-4">
-                        <a asp-controller="Product"
-                           asp-action="List"
-                           class="btn btn-secondary">
-                            Quay lại danh sách
-                        </a>
-
-                        <a asp-controller="Product"
-                           asp-action="Create"
-                           class="btn btn-success">
-                            Thêm sản phẩm mới
-                        </a>
-                    </div>
-                }
-                else
-                {
-                    <div class="alert alert-warning">
-                        Chưa có sản phẩm.
-                        Vui lòng tạo sản phẩm trước.
-                    </div>
+                    <a asp-controller="Product"
+                       asp-action="List"
+                       class="btn btn-secondary">
+                        Quay lại danh sách
+                    </a>
 
                     <a asp-controller="Product"
                        asp-action="Create"
-                       class="btn btn-primary">
-                        Tạo sản phẩm
+                       class="btn btn-success">
+                        Thêm sản phẩm mới
                     </a>
-                }
+
+                </div>
 
             </div>
 

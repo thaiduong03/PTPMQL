@@ -1,18 +1,39 @@
-using System.Globalization;
-using Microsoft.AspNetCore.Mvc;
+using DemoMVC.Data;
 using DemoMVC.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace DemoMVC.Controllers;
 
 public class ProductController : Controller
 {
-    public IActionResult Index() => View();
+    private readonly ApplicationDbContext _context;
 
-    public IActionResult List() => View();
+    public ProductController(ApplicationDbContext context)
+    {
+        _context = context;
+    }
 
-    // GET: /Product/Create  -> hiển thị form
+    // GET: /Product
+    public IActionResult Index()
+    {
+        return View();
+    }
+
+    // GET: /Product/List
+    public IActionResult List()
+    {
+        var products = _context.Products.ToList();
+
+        return View(products);
+    }
+
+    // GET: /Product/Create
     [HttpGet]
-    public IActionResult Create() => View();
+    public IActionResult Create()
+    {
+        return View();
+    }
 
     // POST: /Product/Create
     [HttpPost]
@@ -21,36 +42,32 @@ public class ProductController : Controller
     {
         if (!ModelState.IsValid)
         {
-            // Trả lại đúng view chứa form, kèm dữ liệu đã nhập
             return View(product);
         }
 
-        TempData["SuccessMessage"] = "Sản phẩm đã được tạo thành công.";
-        TempData["ProductName"] = product.Name;
-        TempData["ProductPrice"] = product.Price.ToString(CultureInfo.InvariantCulture);
-        TempData["ProductDescription"] = product.Description;
+        // Lưu sản phẩm vào database
+        _context.Products.Add(product);
+        _context.SaveChanges();
 
-        return RedirectToAction(nameof(Details));
+        // product.Id lúc này đã được SQL Server tự sinh
+        TempData["SuccessMessage"] = "Sản phẩm đã được tạo thành công.";
+
+        return RedirectToAction(nameof(Details), new { id = product.Id });
     }
 
-    // GET: /Product/Details
+    // GET: /Product/Details/1
     [HttpGet]
-    public IActionResult Details()
+    public IActionResult Details(int id)
     {
-        // Đọc TempData rồi chuyển sang ViewBag/ViewData để dùng trong view hiện tại
-        ViewBag.Message = TempData["SuccessMessage"] as string;
-        ViewData["ProductName"] = TempData["ProductName"] as string;
+        var product = _context.Products
+            .FirstOrDefault(p => p.Id == id);
 
-        var product = new Product
+        if (product == null)
         {
-            Name = TempData["ProductName"] as string,
-            Description = TempData["ProductDescription"] as string,
-            Price = decimal.TryParse(
-                TempData["ProductPrice"] as string,
-                NumberStyles.Any,
-                CultureInfo.InvariantCulture,
-                out var price) ? price : 0
-        };
+            return NotFound();
+        }
+
+        ViewBag.Message = TempData["SuccessMessage"];
 
         return View(product);
     }

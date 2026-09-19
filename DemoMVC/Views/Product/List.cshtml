@@ -1,3 +1,5 @@
+@model IEnumerable<DemoMVC.Models.Product>
+
 @{
     ViewData["Title"] = "Danh sách sản phẩm";
 }
@@ -5,8 +7,12 @@
 <div class="container">
 
     <div class="d-flex justify-content-between align-items-center mb-4">
+
         <div>
-            <h1 class="page-title mb-1">Danh sách sản phẩm</h1>
+            <h1 class="page-title mb-1">
+                Danh sách sản phẩm
+            </h1>
+
             <p class="text-muted mb-0">
                 Danh sách các sản phẩm trong hệ thống
             </p>
@@ -17,6 +23,7 @@
            class="btn btn-success">
             + Thêm sản phẩm
         </a>
+
     </div>
 
     <div class="card shadow-sm">
@@ -43,33 +50,47 @@
 
                     <tbody>
 
-                        <tr>
-                            <td>1</td>
-                            <td>iPhone 17</td>
-                            <td>20.000.000 VNĐ</td>
-                            <td>Điện thoại Apple</td>
-                            <td>
-                                <a asp-controller="Product"
-                                   asp-action="Details"
-                                   class="btn btn-sm btn-primary">
-                                    Chi tiết
-                                </a>
-                            </td>
-                        </tr>
+                        @if (Model != null && Model.Any())
+                        {
+                            foreach (var product in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @product.Id
+                                    </td>
 
-                        <tr>
-                            <td>2</td>
-                            <td>MacBook</td>
-                            <td>30.000.000 VNĐ</td>
-                            <td>Laptop Apple</td>
-                            <td>
-                                <a asp-controller="Product"
-                                   asp-action="Details"
-                                   class="btn btn-sm btn-primary">
-                                    Chi tiết
-                                </a>
-                            </td>
-                        </tr>
+                                    <td>
+                                        @product.Name
+                                    </td>
+
+                                    <td>
+                                        @product.Price.ToString("N0") VNĐ
+                                    </td>
+
+                                    <td>
+                                        @product.Description
+                                    </td>
+
+                                    <td>
+                                        <a asp-controller="Product"
+                                           asp-action="Details"
+                                           asp-route-id="@product.Id"
+                                           class="btn btn-sm btn-primary">
+                                            Chi tiết
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="5"
+                                    class="text-center text-muted py-4">
+                                    Chưa có sản phẩm nào.
+                                </td>
+                            </tr>
+                        }
 
                     </tbody>
 
