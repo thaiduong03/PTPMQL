@@ -15,12 +15,31 @@
 }
 else
 {
+    @* ViewBag *@
     @if (ViewBag.Message != null)
     {
         <div class="alert alert-success">
-            @ViewBag.Message
+            <strong>ViewBag:</strong> @ViewBag.Message
         </div>
     }
+
+    @* ViewData *@
+    @if (ViewData["ProductName"] != null)
+    {
+        <div class="alert alert-info">
+            <strong>ViewData:</strong> @ViewData["ProductName"]
+        </div>
+    }
+
+    @* TempData *@
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-primary">
+            <strong>TempData:</strong> @TempData["SuccessMessage"]
+        </div>
+    }
+
+    <hr />
 
     <p>
         <strong>ID:</strong> @Model.Id

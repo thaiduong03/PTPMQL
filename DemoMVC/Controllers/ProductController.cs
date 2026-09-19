@@ -1,3 +1,4 @@
+using System.Globalization;
 using Microsoft.AspNetCore.Mvc;
 using DemoMVC.Models;
 
@@ -5,45 +6,52 @@ namespace DemoMVC.Controllers;
 
 public class ProductController : Controller
 {
-    // GET: /Product/Index
-    public IActionResult Index()
-    {
-        return View();
-    }
+    public IActionResult Index() => View();
 
-    // GET: /Product/List
-    public IActionResult List()
+    public IActionResult List() => View();
+
+    // GET: /Product/Create  -> hiển thị form
+    [HttpGet]
+    public IActionResult Create() => View();
+
+    // POST: /Product/Create
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public IActionResult Create(Product product)
     {
-        return View();
+        if (!ModelState.IsValid)
+        {
+            // Trả lại đúng view chứa form, kèm dữ liệu đã nhập
+            return View(product);
+        }
+
+        TempData["SuccessMessage"] = "Sản phẩm đã được tạo thành công.";
+        TempData["ProductName"] = product.Name;
+        TempData["ProductPrice"] = product.Price.ToString(CultureInfo.InvariantCulture);
+        TempData["ProductDescription"] = product.Description;
+
+        return RedirectToAction(nameof(Details));
     }
 
     // GET: /Product/Details
     [HttpGet]
     public IActionResult Details()
     {
-        return View();
-    }
+        // Đọc TempData rồi chuyển sang ViewBag/ViewData để dùng trong view hiện tại
+        ViewBag.Message = TempData["SuccessMessage"] as string;
+        ViewData["ProductName"] = TempData["ProductName"] as string;
 
-    // GET: /Product/Create
-    [HttpGet]
-    public IActionResult Create()
-    {
-        return View();
-    }
-
-    // POST: /Product/Create
-    [HttpPost]
-    public IActionResult Create(Product product)
-    {
-        if (!ModelState.IsValid)
+        var product = new Product
         {
-            return View(product);
-        }
+            Name = TempData["ProductName"] as string,
+            Description = TempData["ProductDescription"] as string,
+            Price = decimal.TryParse(
+                TempData["ProductPrice"] as string,
+                NumberStyles.Any,
+                CultureInfo.InvariantCulture,
+                out var price) ? price : 0
+        };
 
-        ViewBag.Message = "Thêm sản phẩm thành công!";
-        ViewData["ProductName"] = product.Name;
-
-        // Truyền sản phẩm vừa nhập sang Details
-        return View("Details", product);
+        return View(product);
     }
 }
