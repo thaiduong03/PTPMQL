@@ -1,59 +1,101 @@
 @model DemoMVC.Models.Product
 
 @{
-    ViewData["Title"] = "Product Details";
+    ViewData["Title"] = "Chi tiết sản phẩm";
 }
 
-<h1>Chi tiết sản phẩm</h1>
+<div class="row justify-content-center">
 
-@if (Model == null)
-{
-    <div class="alert alert-warning">
-        Chưa có sản phẩm.
-        Vui lòng tạo sản phẩm trước.
+    <div class="col-md-8">
+
+        <div class="card shadow-sm">
+
+            <div class="card-header bg-dark text-white">
+                <h4 class="mb-0">Chi tiết sản phẩm</h4>
+            </div>
+
+            <div class="card-body">
+
+                @if (ViewBag.Message != null)
+                {
+                    <div class="alert alert-success">
+                        <strong>ViewBag:</strong>
+                        @ViewBag.Message
+                    </div>
+                }
+
+                @if (ViewData["ProductName"] != null)
+                {
+                    <div class="alert alert-info">
+                        <strong>ViewData:</strong>
+                        @ViewData["ProductName"]
+                    </div>
+                }
+
+                @if (TempData["SuccessMessage"] != null)
+                {
+                    <div class="alert alert-primary">
+                        <strong>TempData:</strong>
+                        @TempData["SuccessMessage"]
+                    </div>
+                }
+
+                @if (Model != null && !string.IsNullOrEmpty(Model.Name))
+                {
+                    <hr />
+
+                    <div class="mb-3">
+                        <strong>ID:</strong>
+                        <span>@Model.Id</span>
+                    </div>
+
+                    <div class="mb-3">
+                        <strong>Tên sản phẩm:</strong>
+                        <span>@Model.Name</span>
+                    </div>
+
+                    <div class="mb-3">
+                        <strong>Giá:</strong>
+                        <span>@Model.Price.ToString("N0") VNĐ</span>
+                    </div>
+
+                    <div class="mb-3">
+                        <strong>Mô tả:</strong>
+                        <span>@Model.Description</span>
+                    </div>
+
+                    <div class="mt-4">
+                        <a asp-controller="Product"
+                           asp-action="List"
+                           class="btn btn-secondary">
+                            Quay lại danh sách
+                        </a>
+
+                        <a asp-controller="Product"
+                           asp-action="Create"
+                           class="btn btn-success">
+                            Thêm sản phẩm mới
+                        </a>
+                    </div>
+                }
+                else
+                {
+                    <div class="alert alert-warning">
+                        Chưa có sản phẩm.
+                        Vui lòng tạo sản phẩm trước.
+                    </div>
+
+                    <a asp-controller="Product"
+                       asp-action="Create"
+                       class="btn btn-primary">
+                        Tạo sản phẩm
+                    </a>
+                }
+
+            </div>
+
+        </div>
+
     </div>
-}
-else
-{
-    @* ViewBag *@
-    @if (ViewBag.Message != null)
-    {
-        <div class="alert alert-success">
-            <strong>ViewBag:</strong> @ViewBag.Message
-        </div>
-    }
 
-    @* ViewData *@
-    @if (ViewData["ProductName"] != null)
-    {
-        <div class="alert alert-info">
-            <strong>ViewData:</strong> @ViewData["ProductName"]
-        </div>
-    }
-
-    @* TempData *@
-    @if (TempData["SuccessMessage"] != null)
-    {
-        <div class="alert alert-primary">
-            <strong>TempData:</strong> @TempData["SuccessMessage"]
-        </div>
-    }
-
-    <hr />
-
-    <p>
-        <strong>ID:</strong> @Model.Id
-    </p>
-
-    <p>
-        <strong>Tên sản phẩm:</strong> @Model.Name
-    </p>
-
-    <p>
-        <strong>Giá:</strong> @Model.Price.ToString("N0") VNĐ
-    </p>
-
-    <p>
-        <strong>Mô tả:</strong> @Model.Description
-    </p>
-}
+</div>

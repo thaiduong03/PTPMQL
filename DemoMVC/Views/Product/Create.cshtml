@@ -1,39 +1,102 @@
 @model DemoMVC.Models.Product
 
 @{
-    ViewData["Title"] = "Create Product";
+    ViewData["Title"] = "Thêm sản phẩm";
 }
 
-<h1>Thêm sản phẩm</h1>
+<div class="row justify-content-center">
 
-<form asp-controller="Product" asp-action="Create" method="post">
+    <div class="col-md-8 col-lg-6">
 
-    <div class="mb-3">
-        <label asp-for="Name" class="form-label">
-            Tên sản phẩm
-        </label>
+        <div class="card shadow-sm">
 
-        <input asp-for="Name" class="form-control" />
+            <div class="card-header bg-dark text-white">
+                <h4 class="mb-0">Thêm sản phẩm</h4>
+            </div>
+
+            <div class="card-body">
+
+                <form asp-controller="Product"
+                      asp-action="Create"
+                      method="post">
+
+                    <div class="mb-3">
+
+                        <label asp-for="Name"
+                               class="form-label">
+                            Tên sản phẩm
+                        </label>
+
+                        <input asp-for="Name"
+                               class="form-control"
+                               placeholder="Nhập tên sản phẩm" />
+
+                        <span asp-validation-for="Name"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label asp-for="Price"
+                               class="form-label">
+                            Giá
+                        </label>
+
+                        <input asp-for="Price"
+                               class="form-control"
+                               placeholder="Nhập giá sản phẩm" />
+
+                        <span asp-validation-for="Price"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label asp-for="Description"
+                               class="form-label">
+                            Mô tả
+                        </label>
+
+                        <textarea asp-for="Description"
+                                  class="form-control"
+                                  rows="4"
+                                  placeholder="Nhập mô tả sản phẩm"></textarea>
+
+                        <span asp-validation-for="Description"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+                    <div class="d-flex gap-2">
+
+                        <button type="submit"
+                                class="btn btn-success">
+                            Thêm sản phẩm
+                        </button>
+
+                        <a asp-controller="Product"
+                           asp-action="List"
+                           class="btn btn-secondary">
+                            Quay lại
+                        </a>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
     </div>
 
-    <div class="mb-3">
-        <label asp-for="Price" class="form-label">
-            Giá
-        </label>
+</div>
 
-        <input asp-for="Price" class="form-control" />
-    </div>
-
-    <div class="mb-3">
-        <label asp-for="Description" class="form-label">
-            Mô tả
-        </label>
-
-        <textarea asp-for="Description" class="form-control"></textarea>
-    </div>
-
-    <button type="submit" class="btn btn-primary">
-        Thêm sản phẩm
-    </button>
-
-</form>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

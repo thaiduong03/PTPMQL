@@ -1,8 +1,72 @@
 @{
-    ViewData["Title"] = "Product";
+    ViewData["Title"] = "Sản phẩm";
 }
 
-<div class="text-center">
-    <h1>Product Index</h1>
-    <p>Đây là trang sản phẩm.</p>
+<div class="container">
+
+    <div class="text-center mb-5">
+        <h1 class="display-5 fw-bold">Quản lý sản phẩm</h1>
+        <p class="lead text-muted">
+            Demo ứng dụng quản lý sản phẩm với ASP.NET Core MVC
+        </p>
+    </div>
+
+    <div class="row g-4">
+
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Danh sách sản phẩm</h5>
+
+                    <p class="card-text text-muted">
+                        Xem danh sách các sản phẩm hiện có.
+                    </p>
+
+                    <a asp-controller="Product"
+                       asp-action="List"
+                       class="btn btn-primary">
+                        Xem danh sách
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Thêm sản phẩm</h5>
+
+                    <p class="card-text text-muted">
+                        Thêm sản phẩm mới vào hệ thống.
+                    </p>
+
+                    <a asp-controller="Product"
+                       asp-action="Create"
+                       class="btn btn-success">
+                        Thêm sản phẩm
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Chi tiết sản phẩm</h5>
+
+                    <p class="card-text text-muted">
+                        Xem thông tin chi tiết sản phẩm.
+                    </p>
+
+                    <a asp-controller="Product"
+                       asp-action="Details"
+                       class="btn btn-info">
+                        Xem chi tiết
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
 </div>
