@@ -49,10 +49,13 @@ public class ProductController : Controller
         _context.Products.Add(product);
         _context.SaveChanges();
 
-        // product.Id lúc này đã được SQL Server tự sinh
-        TempData["SuccessMessage"] = "Sản phẩm đã được tạo thành công.";
+        // SQL Server tự sinh ID
+        TempData["SuccessMessage"] =
+            "Sản phẩm đã được tạo thành công.";
 
-        return RedirectToAction(nameof(Details), new { id = product.Id });
+        return RedirectToAction(
+            nameof(Details),
+            new { id = product.Id });
     }
 
     // GET: /Product/Details/1
@@ -71,4 +74,81 @@ public class ProductController : Controller
 
         return View(product);
     }
+
+    // GET: /Product/Edit/1
+    [HttpGet]
+    public IActionResult Edit(int id)
+    {
+        var product = _context.Products
+            .FirstOrDefault(p => p.Id == id);
+
+        if (product == null)
+        {
+            return NotFound();
+        }
+
+        return View(product);
+    }
+
+    // POST: /Product/Edit/1
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public IActionResult Edit(int id, Product product)
+    {
+        if (id != product.Id)
+        {
+            return NotFound();
+        }
+
+        if (!ModelState.IsValid)
+        {
+            return View(product);
+        }
+
+        _context.Products.Update(product);
+        _context.SaveChanges();
+
+        TempData["SuccessMessage"] =
+            "Sản phẩm đã được cập nhật thành công.";
+
+        return RedirectToAction(
+            nameof(Details),
+            new { id = product.Id });
+    }
+    // GET: /Product/Delete/1
+[HttpGet]
+public IActionResult Delete(int id)
+{
+    var product = _context.Products
+        .FirstOrDefault(p => p.Id == id);
+
+    if (product == null)
+    {
+        return NotFound();
+    }
+
+    return View(product);
+}
+
+// POST: /Product/Delete/1
+[HttpPost, ActionName("Delete")]
+[ValidateAntiForgeryToken]
+public IActionResult DeleteConfirmed(int id)
+{
+    var product = _context.Products
+        .FirstOrDefault(p => p.Id == id);
+
+    if (product == null)
+    {
+        return NotFound();
+    }
+
+    _context.Products.Remove(product);
+    _context.SaveChanges();
+
+    TempData["SuccessMessage"] =
+        "Sản phẩm đã được xóa thành công.";
+
+    return RedirectToAction(nameof(List));
+}
 }

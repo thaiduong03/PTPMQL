@@ -6,6 +6,7 @@
 
 <div class="container">
 
+    <!-- Tiêu đề -->
     <div class="d-flex justify-content-between align-items-center mb-4">
 
         <div>
@@ -26,6 +27,8 @@
 
     </div>
 
+
+    <!-- Danh sách -->
     <div class="card shadow-sm">
 
         <div class="card-header bg-dark text-white">
@@ -34,11 +37,21 @@
 
         <div class="card-body">
 
+            <!-- Thông báo thành công -->
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success">
+                    @TempData["SuccessMessage"]
+                </div>
+            }
+
+
             <div class="table-responsive">
 
                 <table class="table table-hover align-middle">
 
                     <thead class="table-light">
+
                         <tr>
                             <th>ID</th>
                             <th>Tên sản phẩm</th>
@@ -46,7 +59,9 @@
                             <th>Mô tả</th>
                             <th>Thao tác</th>
                         </tr>
+
                     </thead>
+
 
                     <tbody>
 
@@ -55,40 +70,76 @@
                             foreach (var product in Model)
                             {
                                 <tr>
+
+                                    <!-- ID -->
                                     <td>
                                         @product.Id
                                     </td>
 
+
+                                    <!-- Tên -->
                                     <td>
                                         @product.Name
                                     </td>
 
+
+                                    <!-- Giá -->
                                     <td>
                                         @product.Price.ToString("N0") VNĐ
                                     </td>
 
+
+                                    <!-- Mô tả -->
                                     <td>
                                         @product.Description
                                     </td>
 
+
+                                    <!-- Thao tác -->
                                     <td>
+
+                                        <!-- Chi tiết -->
                                         <a asp-controller="Product"
                                            asp-action="Details"
                                            asp-route-id="@product.Id"
                                            class="btn btn-sm btn-primary">
                                             Chi tiết
                                         </a>
+
+
+                                        <!-- Sửa -->
+                                        <a asp-controller="Product"
+                                           asp-action="Edit"
+                                           asp-route-id="@product.Id"
+                                           class="btn btn-sm btn-warning">
+                                            Sửa
+                                        </a>
+
+
+                                        <!-- Xóa -->
+                                        <a asp-controller="Product"
+                                           asp-action="Delete"
+                                           asp-route-id="@product.Id"
+                                           class="btn btn-sm btn-danger">
+                                            Xóa
+                                        </a>
+
                                     </td>
+
                                 </tr>
                             }
                         }
                         else
                         {
                             <tr>
+
                                 <td colspan="5"
                                     class="text-center text-muted py-4">
+
                                     Chưa có sản phẩm nào.
+
                                 </td>
+
                             </tr>
                         }
 

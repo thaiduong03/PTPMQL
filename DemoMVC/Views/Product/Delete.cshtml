@@ -1,0 +1,70 @@
+@model DemoMVC.Models.Product
+
+@{
+    ViewData["Title"] = "Xóa sản phẩm";
+}
+
+<div class="row justify-content-center">
+
+    <div class="col-md-8 col-lg-6">
+
+        <div class="card shadow-sm">
+
+            <div class="card-header bg-danger text-white">
+                <h4 class="mb-0">Xóa sản phẩm</h4>
+            </div>
+
+            <div class="card-body">
+
+                <div class="alert alert-warning">
+                    <strong>Cảnh báo!</strong>
+                    Bạn có chắc chắn muốn xóa sản phẩm này không?
+                </div>
+
+                <div class="mb-3">
+                    <strong>ID:</strong>
+                    @Model.Id
+                </div>
+
+                <div class="mb-3">
+                    <strong>Tên sản phẩm:</strong>
+                    @Model.Name
+                </div>
+
+                <div class="mb-3">
+                    <strong>Giá:</strong>
+                    @Model.Price.ToString("N0") VNĐ
+                </div>
+
+                <div class="mb-4">
+                    <strong>Mô tả:</strong>
+                    @Model.Description
+                </div>
+
+                <form asp-controller="Product"
+                      asp-action="Delete"
+                      method="post">
+
+                    <input type="hidden"
+                           asp-for="Id" />
+
+                    <button type="submit"
+                            class="btn btn-danger">
+                        Xác nhận xóa
+                    </button>
+
+                    <a asp-controller="Product"
+                       asp-action="List"
+                       class="btn btn-secondary">
+                        Hủy
+                    </a>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
