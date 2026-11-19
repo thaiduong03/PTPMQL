@@ -1,0 +1,8 @@
+@model DemoMVC.Models.SinhVien
+@{ ViewData["Title"] = "Sửa sinh viên"; }
+<h1>Sửa sinh viên</h1><p><strong>Mã sinh viên:</strong> @Model.MaSinhVien (mã được giữ cố định)</p>
+<form asp-action="Edit" asp-route-id="@Model.MaSinhVien" method="post"><input type="hidden" asp-for="MaSinhVien"/><input type="hidden" asp-for="NamNhapHoc"/><input type="hidden" asp-for="MaHeDaoTao"/><input type="hidden" asp-for="MaNganh"/><div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<div class="mb-3"><label asp-for="HoTen" class="form-label"></label><input asp-for="HoTen" class="form-control"/><span asp-validation-for="HoTen" class="text-danger"></span></div>
+<div class="mb-3"><label asp-for="KhoaId" class="form-label"></label><select asp-for="KhoaId" asp-items="ViewBag.KhoaId" class="form-select"></select><span asp-validation-for="KhoaId" class="text-danger"></span></div>
+<button class="btn btn-primary">Lưu thay đổi</button> <a asp-action="Index" class="btn btn-secondary">Quay lại</a></form>
+@section Scripts { <partial name="_ValidationScriptsPartial"/> }

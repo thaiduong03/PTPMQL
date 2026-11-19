@@ -1,0 +1,11 @@
+@model DemoMVC.Models.SinhVien
+@{ ViewData["Title"] = "Thêm sinh viên"; }
+<h1>Thêm sinh viên</h1><p class="text-muted">Mã sinh viên sẽ được tự động tạo theo năm nhập học, hệ đào tạo, ngành và số thứ tự.</p>
+<form asp-action="Create" method="post"><div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<div class="mb-3"><label asp-for="HoTen" class="form-label"></label><input asp-for="HoTen" class="form-control"/><span asp-validation-for="HoTen" class="text-danger"></span></div>
+<div class="mb-3"><label asp-for="NamNhapHoc" class="form-label"></label><input asp-for="NamNhapHoc" class="form-control"/><span asp-validation-for="NamNhapHoc" class="text-danger"></span></div>
+<div class="mb-3"><label asp-for="MaHeDaoTao" class="form-label"></label><input asp-for="MaHeDaoTao" class="form-control" maxlength="2" placeholder="Ví dụ: 21"/><span asp-validation-for="MaHeDaoTao" class="text-danger"></span></div>
+<div class="mb-3"><label asp-for="MaNganh" class="form-label"></label><input asp-for="MaNganh" class="form-control" maxlength="2" placeholder="Ví dụ: 05"/><span asp-validation-for="MaNganh" class="text-danger"></span></div>
+<div class="mb-3"><label asp-for="KhoaId" class="form-label"></label><select asp-for="KhoaId" asp-items="ViewBag.KhoaId" class="form-select"><option value="">-- Chọn khoa --</option></select><span asp-validation-for="KhoaId" class="text-danger"></span></div>
+<button class="btn btn-success">Tạo sinh viên</button> <a asp-action="Index" class="btn btn-secondary">Quay lại</a></form>
+@section Scripts { <partial name="_ValidationScriptsPartial"/> }

@@ -1,0 +1,5 @@
+@model DemoMVC.Models.Khoa
+@{ ViewData["Title"] = "Xóa khoa"; }
+<h1>Xóa khoa</h1><div class="alert alert-warning">Bạn có chắc muốn xóa khoa <strong>@Model.TenKhoa</strong>? @if (Model.SinhViens.Count > 0) { <span>Khoa hiện có @Model.SinhViens.Count sinh viên nên không thể xóa.</span> }</div>
+<dl class="row"><dt class="col-sm-3">Mã khoa</dt><dd class="col-sm-9">@Model.MaKhoa</dd><dt class="col-sm-3">Tên khoa</dt><dd class="col-sm-9">@Model.TenKhoa</dd></dl>
+<form asp-action="Delete" method="post"><input type="hidden" name="id" value="@Model.Id"/><button class="btn btn-danger" disabled="@(Model.SinhViens.Count > 0)">Xác nhận xóa</button> <a asp-action="Index" class="btn btn-secondary">Quay lại</a></form>

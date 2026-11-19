@@ -1,0 +1,7 @@
+@model IEnumerable<DemoMVC.Models.SinhVien>
+@{ ViewData["Title"] = "Quản lý sinh viên"; }
+<div class="d-flex justify-content-between align-items-center mb-3"><h1>Sinh viên</h1><a asp-action="Create" class="btn btn-success">Thêm sinh viên</a></div>
+@if (TempData["SuccessMessage"] is string ok) { <div class="alert alert-success">@ok</div> }
+<div class="table-responsive"><table class="table table-striped align-middle"><thead><tr><th>Mã sinh viên</th><th>Họ và tên</th><th>Năm nhập học</th><th>Mã hệ</th><th>Mã ngành</th><th>Khoa</th><th>Thao tác</th></tr></thead><tbody>
+@foreach (var sv in Model) { <tr><td>@sv.MaSinhVien</td><td>@sv.HoTen</td><td>@sv.NamNhapHoc</td><td>@sv.MaHeDaoTao</td><td>@sv.MaNganh</td><td>@sv.Khoa?.TenKhoa</td><td><a asp-action="Edit" asp-route-id="@sv.MaSinhVien" class="btn btn-sm btn-warning">Sửa</a> <a asp-action="Delete" asp-route-id="@sv.MaSinhVien" class="btn btn-sm btn-danger">Xóa</a></td></tr> }
+</tbody></table></div>
