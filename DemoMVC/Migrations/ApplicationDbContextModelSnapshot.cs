@@ -3,13 +3,13 @@ using DemoMVC.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
 namespace DemoMVC.Migrations
 {
-    [DbContext(typeof(ApplicationDbContext))]
     partial class ApplicationDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
@@ -21,30 +21,63 @@ namespace DemoMVC.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("DemoMVC.Models.Khoa", b =>
+                {
+                    b.Property<int>("Id").ValueGeneratedOnAdd().HasColumnType("int");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<string>("MaKhoa").IsRequired().HasMaxLength(20).HasColumnType("nvarchar(20)");
+                    b.Property<string>("MoTa").HasMaxLength(500).HasColumnType("nvarchar(500)");
+                    b.Property<string>("TenKhoa").IsRequired().HasMaxLength(150).HasColumnType("nvarchar(150)");
+                    b.HasKey("Id");
+                    b.HasIndex("MaKhoa").IsUnique();
+                    b.ToTable("Khoas");
+                    b.HasData(
+                        new { Id = 1, MaKhoa = "DCT", MoTa = "Đào tạo và nghiên cứu lĩnh vực công nghệ thông tin.", TenKhoa = "Khoa Công nghệ thông tin" },
+                        new { Id = 2, MaKhoa = "DCK", MoTa = "Đào tạo các ngành cơ khí và điện.", TenKhoa = "Khoa Cơ - Điện" },
+                        new { Id = 3, MaKhoa = "DCD", MoTa = "Đào tạo và nghiên cứu lĩnh vực dầu khí.", TenKhoa = "Khoa Dầu khí" },
+                        new { Id = 4, MaKhoa = "DCC", MoTa = "Đào tạo lĩnh vực trắc địa, bản đồ và quản lý đất đai.", TenKhoa = "Khoa Trắc địa - Bản đồ và Quản lý đất đai" },
+                        new { Id = 5, MaKhoa = "DCKS", MoTa = "Đào tạo các ngành kỹ thuật mỏ.", TenKhoa = "Khoa Mỏ" },
+                        new { Id = 6, MaKhoa = "DCDL", MoTa = "Đào tạo và nghiên cứu lĩnh vực địa chất.", TenKhoa = "Khoa Địa chất" },
+                        new { Id = 7, MaKhoa = "DCKT", MoTa = "Đào tạo lĩnh vực kinh tế và quản trị kinh doanh.", TenKhoa = "Khoa Kinh tế và Quản trị kinh doanh" },
+                        new { Id = 8, MaKhoa = "DMT", MoTa = "Đào tạo và nghiên cứu lĩnh vực môi trường.", TenKhoa = "Khoa Môi trường" });
+                });
+
             modelBuilder.Entity("DemoMVC.Models.Product", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
+                    b.Property<int>("Id").ValueGeneratedOnAdd().HasColumnType("int");
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("Price")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)");
-
+                    b.Property<string>("Description").IsRequired().HasColumnType("nvarchar(max)");
+                    b.Property<string>("Name").IsRequired().HasColumnType("nvarchar(max)");
+                    b.Property<decimal>("Price").HasPrecision(18, 2).HasColumnType("decimal(18,2)");
                     b.HasKey("Id");
-
                     b.ToTable("Products");
                 });
+
+            modelBuilder.Entity("DemoMVC.Models.SinhVien", b =>
+                {
+                    b.Property<string>("MaSinhVien").HasMaxLength(10).HasColumnType("nvarchar(10)");
+                    b.Property<string>("HoTen").IsRequired().HasMaxLength(150).HasColumnType("nvarchar(150)");
+                    b.Property<int>("KhoaId").HasColumnType("int");
+                    b.Property<string>("MaHeDaoTao").IsRequired().HasMaxLength(2).HasColumnType("nvarchar(2)");
+                    b.Property<string>("MaNganh").IsRequired().HasMaxLength(2).HasColumnType("nvarchar(2)");
+                    b.Property<int>("NamNhapHoc").HasColumnType("int");
+                    b.HasKey("MaSinhVien");
+                    b.HasIndex("KhoaId");
+                    b.HasIndex("MaSinhVien").IsUnique();
+                    b.ToTable("SinhViens");
+                });
+
+            modelBuilder.Entity("DemoMVC.Models.SinhVien", b =>
+                {
+                    b.HasOne("DemoMVC.Models.Khoa", "Khoa")
+                        .WithMany("SinhViens")
+                        .HasForeignKey("KhoaId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                    b.Navigation("Khoa");
+                });
+
+            modelBuilder.Entity("DemoMVC.Models.Khoa", b => b.Navigation("SinhViens"));
 #pragma warning restore 612, 618
         }
     }
