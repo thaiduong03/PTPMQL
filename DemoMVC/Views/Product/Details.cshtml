@@ -47,6 +47,13 @@
                 <div class="mt-4">
 
                     <a asp-controller="Product"
+                       asp-action="Edit"
+                       asp-route-id="@Model.Id"
+                       class="btn btn-warning">
+                        Sửa sản phẩm
+                    </a>
+
+                    <a asp-controller="Product"
                        asp-action="List"
                        class="btn btn-secondary">
                         Quay lại danh sách

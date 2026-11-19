@@ -1,5 +1,47 @@
 @model DemoMVC.Models.Khoa
-@{ ViewData["Title"] = "Xóa khoa"; }
-<h1>Xóa khoa</h1><div class="alert alert-warning">Bạn có chắc muốn xóa khoa <strong>@Model.TenKhoa</strong>? @if (Model.SinhViens.Count > 0) { <span>Khoa hiện có @Model.SinhViens.Count sinh viên nên không thể xóa.</span> }</div>
-<dl class="row"><dt class="col-sm-3">Mã khoa</dt><dd class="col-sm-9">@Model.MaKhoa</dd><dt class="col-sm-3">Tên khoa</dt><dd class="col-sm-9">@Model.TenKhoa</dd></dl>
-<form asp-action="Delete" method="post"><input type="hidden" name="id" value="@Model.Id"/><button class="btn btn-danger" disabled="@(Model.SinhViens.Count > 0)">Xác nhận xóa</button> <a asp-action="Index" class="btn btn-secondary">Quay lại</a></form>
+
+@{
+    ViewData["Title"] = "Xóa khoa";
+    var hasStudents = Model.SinhViens.Count > 0;
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-9 col-lg-7">
+        <div class="card shadow-sm">
+            <div class="card-header bg-danger text-white">
+                <h1 class="h4 mb-0">Xóa khoa</h1>
+            </div>
+            <div class="card-body">
+                @if (hasStudents)
+                {
+                    <div class="alert alert-warning" role="alert">
+                        Khoa này đang có @Model.SinhViens.Count sinh viên nên không thể xóa.
+                    </div>
+                }
+                else
+                {
+                    <div class="alert alert-warning" role="alert">
+                        Bạn có chắc chắn muốn xóa khoa này không? Thao tác này không thể hoàn tác.
+                    </div>
+                }
+
+                <dl class="row">
+                    <dt class="col-sm-3">Mã khoa</dt>
+                    <dd class="col-sm-9">@Model.MaKhoa</dd>
+                    <dt class="col-sm-3">Tên khoa</dt>
+                    <dd class="col-sm-9">@Model.TenKhoa</dd>
+                    <dt class="col-sm-3">Sinh viên</dt>
+                    <dd class="col-sm-9">@Model.SinhViens.Count</dd>
+                </dl>
+
+                <form asp-action="Delete" asp-route-id="@Model.Id" method="post">
+                    <input type="hidden" name="id" value="@Model.Id" />
+                    <div class="d-flex flex-wrap gap-2">
+                        <button type="submit" class="btn btn-danger" disabled="@hasStudents">Xác nhận xóa</button>
+                        <a asp-action="Index" class="btn btn-outline-secondary">Quay lại danh sách</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

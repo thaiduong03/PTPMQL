@@ -15,15 +15,14 @@ public class ProductController : Controller
     }
 
     // GET: /Product
-    public IActionResult Index()
-    {
-        return View();
-    }
+    public IActionResult Index() => RedirectToAction(nameof(List));
 
     // GET: /Product/List
     public IActionResult List()
     {
-        var products = _context.Products.ToList();
+        var products = _context.Products
+            .OrderBy(product => product.Id)
+            .ToList();
 
         return View(products);
     }
@@ -105,7 +104,17 @@ public class ProductController : Controller
             return View(product);
         }
 
-        _context.Products.Update(product);
+        var existingProduct = _context.Products
+            .FirstOrDefault(p => p.Id == id);
+
+        if (existingProduct == null)
+        {
+            return NotFound();
+        }
+
+        existingProduct.Name = product.Name;
+        existingProduct.Price = product.Price;
+        existingProduct.Description = product.Description;
         _context.SaveChanges();
 
         TempData["SuccessMessage"] =

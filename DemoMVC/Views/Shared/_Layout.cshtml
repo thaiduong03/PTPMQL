@@ -2,9 +2,9 @@
     var controller = ViewContext.RouteData.Values["controller"]?.ToString();
     var action = ViewContext.RouteData.Values["action"]?.ToString();
 
-    string NavClass(string ctrl, string? act = null)
+    string NavClass(string ctrl, params string[] acts)
     {
-        bool isActive = controller == ctrl && (act == null || action == act);
+        bool isActive = controller == ctrl && (acts.Length == 0 || acts.Contains(action));
         return isActive ? "nav-link active" : "nav-link";
     }
 }
@@ -72,18 +72,10 @@
                         </li>
 
                         <li class="nav-item">
-                            <a class="@NavClass("Product", "Index")"
-                               asp-controller="Product"
-                               asp-action="Index">
-                                Sản phẩm
-                            </a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="@NavClass("Product", "List")"
+                            <a class="@NavClass("Product", "List", "Details", "Edit", "Delete")"
                                asp-controller="Product"
                                asp-action="List">
-                                Danh sách
+                                Sản phẩm
                             </a>
                         </li>
 

@@ -39,10 +39,17 @@ public class KhoaController : Controller
     public async Task<IActionResult> Edit(int id, Khoa khoa)
     {
         if (id != khoa.Id) return NotFound();
+
+        var existingKhoa = await _context.Khoas.FindAsync(id);
+        if (existingKhoa == null) return NotFound();
+
         if (await _context.Khoas.AnyAsync(k => k.Id != id && k.MaKhoa == khoa.MaKhoa))
             ModelState.AddModelError(nameof(khoa.MaKhoa), "Mã khoa đã tồn tại.");
         if (!ModelState.IsValid) return View(khoa);
-        _context.Update(khoa);
+
+        existingKhoa.MaKhoa = khoa.MaKhoa;
+        existingKhoa.TenKhoa = khoa.TenKhoa;
+        existingKhoa.MoTa = khoa.MoTa;
         await _context.SaveChangesAsync();
         TempData["SuccessMessage"] = "Đã cập nhật khoa.";
         return RedirectToAction(nameof(Index));

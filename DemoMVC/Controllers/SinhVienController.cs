@@ -2,6 +2,7 @@ using DemoMVC.Data;
 using DemoMVC.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 namespace DemoMVC.Controllers;
@@ -27,14 +28,31 @@ public class SinhVienController : Controller
         // The key is generated below and is intentionally absent from the create form.
         ModelState.Remove(nameof(sinhVien.MaSinhVien));
 
+        if (sinhVien.NamNhapHoc > DateTime.Today.Year)
+            ModelState.AddModelError(nameof(sinhVien.NamNhapHoc), "Năm nhập học không được lớn hơn năm hiện tại.");
+
         if (!await _context.Khoas.AnyAsync(k => k.Id == sinhVien.KhoaId))
             ModelState.AddModelError(nameof(sinhVien.KhoaId), "Khoa được chọn không tồn tại.");
         if (ModelState.IsValid)
         {
             var prefix = $"{sinhVien.NamNhapHoc % 100:00}{sinhVien.MaHeDaoTao}{sinhVien.MaNganh}";
-            var last = await _context.SinhViens.Where(s => s.MaSinhVien.StartsWith(prefix))
-                .Select(s => s.MaSinhVien).OrderByDescending(m => m).FirstOrDefaultAsync();
-            var next = last == null ? 1 : int.Parse(last[^4..]) + 1;
+            var existingCodes = await _context.SinhViens
+                .Where(s => s.MaSinhVien.StartsWith(prefix))
+                .Select(s => s.MaSinhVien)
+                .ToListAsync();
+
+            var lastSequence = 0;
+            foreach (var existingCode in existingCodes)
+            {
+                if (existingCode.Length == 10 &&
+                    existingCode.AsSpan(prefix.Length, 4).ToString().All(char.IsAsciiDigit) &&
+                    int.TryParse(existingCode.AsSpan(prefix.Length, 4), out var sequence))
+                {
+                    lastSequence = Math.Max(lastSequence, sequence);
+                }
+            }
+
+            var next = lastSequence + 1;
             if (next > 9999)
                 ModelState.AddModelError(string.Empty, "Đã hết số thứ tự sinh viên cho tổ hợp năm, hệ đào tạo và ngành này.");
             else
@@ -47,9 +65,13 @@ public class SinhVienController : Controller
                     TempData["SuccessMessage"] = $"Đã thêm sinh viên với mã {sinhVien.MaSinhVien}.";
                     return RedirectToAction(nameof(Index));
                 }
-                catch (DbUpdateException)
+                catch (DbUpdateException exception)
                 {
-                    ModelState.AddModelError(string.Empty, "Không thể cấp mã sinh viên. Vui lòng thử lại.");
+                    var isDuplicateCode = exception.GetBaseException() is SqlException { Number: 2601 or 2627 };
+                    var errorMessage = isDuplicateCode
+                        ? "Mã sinh viên vừa được cấp đã tồn tại. Vui lòng gửi lại biểu mẫu để cấp mã khác."
+                        : "Không thể lưu sinh viên. Vui lòng thử lại.";
+                    ModelState.AddModelError(string.Empty, errorMessage);
                 }
             }
         }
@@ -70,6 +92,16 @@ public class SinhVienController : Controller
     public async Task<IActionResult> Edit(string id, SinhVien sinhVien)
     {
         if (id != sinhVien.MaSinhVien) return NotFound();
+
+        var existingSinhVien = await _context.SinhViens.FindAsync(id);
+        if (existingSinhVien == null) return NotFound();
+
+        // Immutable student identifiers are always taken from the database.
+        sinhVien.MaSinhVien = existingSinhVien.MaSinhVien;
+        sinhVien.NamNhapHoc = existingSinhVien.NamNhapHoc;
+        sinhVien.MaHeDaoTao = existingSinhVien.MaHeDaoTao;
+        sinhVien.MaNganh = existingSinhVien.MaNganh;
+
         if (!await _context.Khoas.AnyAsync(k => k.Id == sinhVien.KhoaId))
             ModelState.AddModelError(nameof(sinhVien.KhoaId), "Khoa được chọn không tồn tại.");
         if (!ModelState.IsValid)
@@ -77,11 +109,9 @@ public class SinhVienController : Controller
             await LoadKhoas(sinhVien.KhoaId);
             return View(sinhVien);
         }
-        _context.Entry(sinhVien).State = EntityState.Modified;
-        _context.Entry(sinhVien).Property(s => s.MaSinhVien).IsModified = false;
-        _context.Entry(sinhVien).Property(s => s.NamNhapHoc).IsModified = false;
-        _context.Entry(sinhVien).Property(s => s.MaHeDaoTao).IsModified = false;
-        _context.Entry(sinhVien).Property(s => s.MaNganh).IsModified = false;
+
+        existingSinhVien.HoTen = sinhVien.HoTen;
+        existingSinhVien.KhoaId = sinhVien.KhoaId;
         await _context.SaveChangesAsync();
         TempData["SuccessMessage"] = "Đã cập nhật thông tin sinh viên.";
         return RedirectToAction(nameof(Index));
